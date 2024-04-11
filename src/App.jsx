@@ -22,7 +22,7 @@ function App() {
       setIsConnected(true);
       console.log("Connected to server.");
 
-      socket.emit("join", { person_id: 6739 });
+      socket.emit("join", { person_id: 6740 });
     }
 
     function onDisconnect() {
@@ -30,18 +30,17 @@ function App() {
     }
 
     function onLogLoad(data) {
-      console.log(data);
       setLogs((previous) => [...previous, data.data.message]);
     }
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("logLoad", onLogLoad);
+    socket.on("log_message", onLogLoad);
 
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("logLoad", onLogLoad);
+      socket.off("log_message", onLogLoad);
     };
   }, []);
 
@@ -61,6 +60,8 @@ function App() {
           headers: {
             "Content-Type": "audio/wav",
             Authorization: `Bearer ${OPENAI_API_KEY}`,
+            withCredentials: false,
+            "Access-Control-Allow-Credentials": false,
           },
         }
       );
@@ -86,6 +87,8 @@ function App() {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${OPENAI_API_KEY}`,
+            withCredentials: false,
+            "Access-Control-Allow-Credentials": false,
           },
           responseType: "arraybuffer",
         }
@@ -106,6 +109,7 @@ function App() {
   return (
     <>
       <h4>Test socket.io</h4>
+      <p>{logs}</p>
       <hr />
 
       <button onClick={handleSpeechRecognition}>
